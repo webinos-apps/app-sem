@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns       = "http://www.w3.org/ns/widgets"
+        id          = "http://apps.webinos.org/smartenergymonitor.wgt"
+        version     = "0.1"
+        height      = "960"
+        width       = "640"
+   >
+ 
+  <name short="SmartEnergyMonitor">
+   SmartEnergyMonitor
+  </name>
+
+  <description>
+ The modern city is turning into to a central hub of human life which depends on information and communication technologies (ICT). New technical solutions are being developed and perhaps most importantly, existing infrastructures can be utilized more efficiently. Therefore, ICT infrastructures of the smart city are logically connected to each other in order to exchange and use data about status, demands and capacities. Information is available wherever it is needed and the modern city thus makes itself transparent. The technology itself takes a backseat because the control concepts fit seamlessly into the everyday life and customs of the people. Energy is one of the important topics discussed in context of Smart cities: power supply system will be converted into an intelligent energy information system that will not only transport energy but also information about consumption and availability. In smart cities, a transparent data exchange for the consumer will support conscious power consumption. The SmartEnergyMonitor is a cross-platform mobile application that allows household users to monitor, control and manage their energy consumption at home from anywhere at any time. The application considers the perspective of a consumer who wants to manage their energy consumption, own their energy consumption data and use that data to negotiate with their energy suppliers and / or switch energy suppliers. Furthermore, household consumers are able to control the energy consumption of connected (via actuators) devices ( e.g. Switch for turning light ON or OFF, Thermostat for maintaining the temperature near a desired setpoint, etc. ) through this application.
+  </description>
+
+  <author email="louay.bassbouss@fokus.fraunhofer.de">Louay Bassbouss</author>
+
+  <icon src="assets/icon.png" />
+
+  <content type="text/html" src="index.html"/>
+
+  <license>
+SmartEnergyMonitor
+Copyright (C) Fraunhofer FOKUS, 2011
+http://www.fokus.fraunhofer.de/go/fame
+
+This product includes software developed at 
+Fraunhofer FOKUS (http://www.fokus.fraunhofer.de)
+
+Louay Bassbouss "louay.bassbouss@fokus.fraunhofer.de"
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  </license>
+</widget>

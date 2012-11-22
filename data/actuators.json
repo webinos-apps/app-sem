@@ -1,0 +1,15 @@
+{
+	"03911950": {
+		"id": "03911950",
+		"type": "http://webinos.org/api/actuators.switch",
+		"name": "Kitchen Light Switch",
+		"description": "This is a switch to turn the light in the kitchen ON or OFF",
+		"unit": null,
+		"options": {
+			"0": "OFF",
+			"1": "ON"
+		},
+		"vendor": "Beta Electric Industry",
+		"version": "1.0"
+	}
+}

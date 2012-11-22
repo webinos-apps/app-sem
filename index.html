@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    	<meta charset="ISO-8859-1">
+        <title>SmartEnergyMonitor</title>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="apple-touch-startup-image" href="assets/images/startup.png">
+        <!-- Apple launcher icon -->
+        <link rel="apple-touch-icon" href="assets/images/launcher-icon.png" />
+        <link rel="icon" href="assets/images/launcher-icon.png">
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+        <link rel="stylesheet" href="js/jqm/jquery.mobile-1.1.0-rc.1.min.css" /> 
+        <link rel="stylesheet" href="css/style.css" />
+		<script src="js/jqm/jquery-1.7.1.min.js"></script>
+        <script>
+			jQuery(document).bind("mobileinit", function() {
+				jQuery.mobile.defaultPageTransition = null;
+			});
+        </script>
+        <script src="js/jqm/jquery.mobile-1.1.0-rc.1.min.js"></script>
+        <script src="js/jquery.json-2.3.min.js"></script>
+        <script src="js/jstorage.min.js"></script>
+        <script src="js/jqm.page.params.js"></script>
+        <script src="js/highcharts/highcharts.js"></script>
+        <script src="js/sem.js"></script>
+        <script src="js/main.js"></script>
+        <script src="/client/webinos.js"></script>
+    </head>
+    <body>
+    
+        <!-- Home Page -->
+        <div data-role="page" id="home">
+            <div data-role="header" style="text-align: center;">
+        		<img src="assets/images/smartenergymonitor.png">
+        	</div>
+        	<div data-role="content" >	
+        		<div class=" ui-grid-a">
+					<div class="ui-block-a" style="text-align: right;"><a href="#sensors" style="padding-right: 10px;"><img src="assets/images/sensor-icon.png" width="128"/></a></div>
+					<div class="ui-block-b" style="text-align: left;"><a href="#actuators" style="padding-left: 10px;"><img src="assets/images/actuator-icon.png" width="128"/></a></div>
+					<div class="ui-block-a" style="text-align: right;"><a href="#providers" style="padding-right: 10px;"><img src="assets/images/provider-icon.png" width="128"/></a></div>
+					<div class="ui-block-b" style="text-align: left;"><a href="#settings" style="padding-left: 10px;"><img src="assets/images/settings-icon.png" width="128"/></a></div>
+        		</div>
+        	</div> 
+        </div>
+        <!-- End Home Page -->
+        
+		<!-- Login Page -->
+        <div data-role="page" id="login">
+            <div data-role="header" style="text-align: center;">
+        		<img src="assets/images/smartenergymonitor.png">
+        	</div>
+        	<div data-role="content" >
+        		<h2>Login</h2>
+        		<p><em style="color: red;" id="login_err_msg"></em></p>
+				<fieldset>
+					<p>
+						<label for="username">Username:</label>
+						<input id="username" type="text" name="username" maxlength="30" />
+					</p>
+					<p>
+						<label for="password">Password:</label>
+						<input type="password" name="password" id="password" />
+					</p>
+                	<p><button id="login_btn">Login</button></p>
+            	</fieldset>
+        	</div>
+        </div>
+        <!-- End Login Page -->
+        
+        <!-- Sensors Page -->
+        <div data-role="page" id="sensors"  data-title="Sensors">
+            <div data-role="header">
+            	<a data-role="button" data-rel="back" data-icon="back">Back</a>
+        		<h1>Sensors</h1>
+        		<a href="#home" data-role="button" data-icon="home">Home</a>
+        	</div>
+        	<div data-role="content" >	
+        		<ul data-role="listview" data-inset="true" data-filter="true" id="sensors-list">
+        			<!-- place holder for sensors -->
+        		</ul>
+        	</div> 
+        </div>
+        <!-- End Sensors Page -->
+        
+        <!-- Actuators Page -->
+        <div data-role="page" id="actuators">
+            <div data-role="header">
+        		<a data-role="button" data-rel="back" data-icon="back">Back</a>
+        		<h1>Actuators</h1>
+        		<a href="#home" data-role="button" data-icon="home">Home</a>
+        	</div>
+        	<div data-role="content" >	
+        		<ul data-role="listview" data-inset="true" data-filter="true" id="actuators-list">
+        			<!-- place holder for actuators -->
+        		</ul>
+        	</div> 
+        </div>
+        <!-- End Actuators Page -->
+        
+        <!-- Providers Page -->
+        <div data-role="page" id="providers">
+            <div data-role="header">
+        		<a data-role="button" data-rel="back" data-icon="back">Back</a>
+        		<h1>Providers</h1>
+        		<a href="#home" data-role="button" data-icon="home">Home</a>
+        	</div>
+        	<div data-role="content" >	
+        		<ul data-role="listview" data-inset="true" data-filter="true" id="providers-list">
+        			<!-- place holder for providers -->
+        		</ul>
+        	</div> 
+        </div>
+        <!-- End Providers Page -->
+        
+        <!-- Settings Page -->
+        <div data-role="page" id="settings">
+            <div data-role="header">
+        		<a data-role="button" data-rel="back" data-icon="back">Back</a>
+        		<h1>Settings</h1>
+        		<a href="#home" data-role="button" data-icon="home">Home</a>
+        	</div>
+        	<div data-role="content">
+        		<fieldset>
+					<p>
+						<label for="actuators_host">Actuators host:</label>
+						<input type="text" id="actuators_host" name="actuators_host"/>
+					</p>
+					<hr>
+					<p><button id="logout_btn">Logout</button></p>
+            	</fieldset>
+            	
+            	
+        	</div> 
+        </div>
+        <!-- End Providers Page -->
+        
+        <!-- Sensor Page -->
+        <div data-role="page" id="sensor">
+            <div data-role="header">
+        		<a data-role="button" data-rel="back" data-icon="back">Back</a>
+        		<h1>Sensor</h1>
+        		<a href="#home" data-role="button" data-icon="home">Home</a>
+        	</div>
+        	<div data-role="content" >	
+        		<div class="ui-body ui-body-a"><span id="sensor-name"></span>: <span id="sensor-value"></span> <span id="sensor-unit"></span></div>
+        		<br>
+        		<div id="sensor-chart" style="height: 300px; width: 90%; margin: 0 auto;"></div>
+        	</div> 
+        </div>
+        <!-- End Sensor Page -->
+        
+        <!-- Actuator Page -->
+        <div data-role="page" id="actuator">
+            <div data-role="header">
+        		<a data-role="button" data-rel="back" data-icon="back">Back</a>
+        		<h1>Actuator</h1>
+        		<a href="#home" data-role="button" data-icon="home">Home</a>
+        	</div>
+        	<div data-role="content" >
+        		<div class="ui-body ui-body-a"><span id="actuator-name"></span></div>
+        		<br>
+        		<fieldset>
+	        		<p>
+						<label for="actuator_value_field">Actuator Value:</label>
+						<div data-role="fieldcontain" id="actuator_value_field">
+	
+						</div>
+					</p>
+				</fieldset>
+				<p><button id="actuator_value_btn">Submit</button></p>
+        	</div> 
+        </div>
+        <!-- End Actuator Page -->
+    </body>
+</html>
