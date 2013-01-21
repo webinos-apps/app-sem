@@ -7,11 +7,13 @@
 		"http://webinos.org/api/sensors.humidity",
 		"http://webinos.org/api/sensors.light",
 		"http://webinos.org/api/sensors.voltage",
-		"http://webinos.org/api/sensors.electricity"
+		"http://webinos.org/api/sensors.electricity",
+		"http://webinos.org/api/sensors.proximity"
 		
 	];
 	var actuator_types = [
-		"http://webinos.org/api/actuators.switch"
+		"http://webinos.org/api/actuators.switch",
+		"http://webinos.org/api/actuators.linearmotor"
 	]
 	var icons = {
 			"http://webinos.org/api/sensors.temperature": "temperature-icon.png",
@@ -19,8 +21,11 @@
 			"http://webinos.org/api/sensors.light": "light-icon.png",
 			"http://webinos.org/api/sensors.voltage": "voltage-icon.png",
 			"http://webinos.org/api/sensors.electricity":"electricity-icon.png",
-			"http://webinos.org/api/actuators.switch": "switch-icon.png"
+			"http://webinos.org/api/actuators.switch": "switch-icon.png",
+			"http://webinos.org/api/sensors.proximity": "proximity-icon.png",
+			"http://webinos.org/api/actuators.linearmotor": "linearmotor-icon.png"
 	};
+	
 	var sensors = {};
 	var actuators = {};
 	var sensor_chart;
@@ -155,7 +160,7 @@
 						onBind:function(){
 		        			console.log("Service "+service.api+" bound");
 		        			console.log(service);
-		        			service.configureSensor({}, 
+		        			service.configureSensor({timeout: 120, rate: 500, eventFireMode: "fixedinterval"}, 
 		        				function(){
 		        					var sensor = service;
 		                			console.log('Sensor ' + service.api + ' configured');
@@ -165,6 +170,7 @@
 		            				var unit = (values && values[values.length-1].unit)  || '';
 		            				var time = (values && values[values.length-1].time)  || '';
 		            				jQuery("#sensors-list").append('<li><a href="#sensor?'+sem.serialize(params)+'"><img src="./assets/images/'+icons[sensor.api]+'"/><h3>'+sensor.displayName+'</h3><p>'+sensor.description+'</p><p class="ui-li-aside ui-li-desc"><strong id="sensor-'+sensor.id+'">'+value+' '+unit+'</strong><br><span id="time-'+sensor.id+'">'+time+'</span></p></a></li>');
+		                			/*
 		                			service.addEventListener('onEvent', 
 		                    			function(event){
 		                            		console.log("New Event");
@@ -172,7 +178,7 @@
 		                            		onSensorEvent(event);
 		                        		},
 		                    			false
-		                    		);
+		                    		);*/
 		                			try {
 		                				jQuery('#sensors-list').listview('refresh');
 		                				jQuery("#sensors").trigger('updatelayout');
@@ -190,7 +196,32 @@
 			});
 		}
 		
-		jQuery.ajax('actuators.json',{
+		// discovering actuators
+		for ( var i in actuator_types) {
+			var type = actuator_types[i];
+			webinos.discovery.findServices(new ServiceType(type), {
+				onFound: function (service) {
+					console.log("Service "+service.serviceAddress+" found ("+service.api+")");
+					actuators[service.id] = service;
+					service.bind({
+						onBind:function(){
+		        			console.log("Service "+service.api+" bound");
+							var params = {aid: service.id};
+							jQuery("#actuators-list").append('<li><a href="#actuator?'+sem.serialize(params)+'"><img src="./assets/images/'+icons[service.api]+'"/><h3>'+service.displayName+'</h3><p>'+service.description+'</p></a></li>');
+		        			try {
+		 						jQuery('#actuators-list').listview('refresh');
+								jQuery("#actuators").trigger('updatelayout');
+							}
+							catch (e){
+							}
+		        		}
+					});
+				}
+			});
+		}
+		
+		// load static actuators
+		jQuery.ajax('data/actuators.json',{
 	        dataType: 'json',
 	        success: function(data){
 	        	actuators = data;
@@ -271,18 +302,39 @@
 		if (actuator) {
 			var html = "";
 			jQuery('#actuator-name').html(actuator.name);
-			if (actuator.options) {
-				html += "<select id='actuator_value'>";
-				html += '<option>-- select --</option>';
-				for ( var val in actuator.options) {
-					var option = actuator.options[val];
-					html += '<option value="'+val+'">'+option+'</option>';
+
+//			if (actuator.options) {
+//				html += "<select id='actuator_value'>";
+//				html += '<option>-- select --</option>';
+//				for ( var val in actuator.options) {
+//					var option = actuator.options[val];
+//					html += '<option value="'+val+'">'+option+'</option>';
+//				}
+//				html += "</select>";
+//			}
+//			else {
+//				html += "<input type='number' id='actuator_value'/>";
+//			}
+			
+			if(actuator.range){
+				var min = actuator.range[0][0];
+				var max = actuator.range[0][1];
+				if(max-min < 10){
+					html += "<select id='actuator_value'>";
+					html += '<option>-- select --</option>';
+					for (var i=min; i<=max; i++) {
+			 			html += '<option value="'+i+'">'+i+'</option>';
+			 		}			 		
+			 		html += "</select>";
 				}
-				html += "</select>";
+				else{
+					html += "<input type='number' id='actuator_value'/>";
+				}
 			}
 			else {
 				html += "<input type='number' id='actuator_value'/>";
 			}
+
 			jQuery('#actuator_value_field').html(html);
 			if (typeof actuator.value == "number") {
 				jQuery('#actuator_value').val(actuator.value);
@@ -333,25 +385,47 @@
 	});
 	
 	jQuery('#actuator_value_btn').live( 'click',function(event,data){
-		var actuators_host = settings('actuators_host');
-		if (!actuators_host) {
-			jQuery.mobile.changePage(jQuery("#settings"));
+		var params = sem.deserialize(location.hash);
+		var aid = params['aid'];
+		var actuator = actuators[aid];
+		var val = jQuery("#actuator_value").val();
+		var val_array=new Array(); 
+		val_array[0]=parseFloat(val);
+
+		try{
+			actuator.setValue(val_array,
+				function(actuatorEvent){
+					alert(JSON.stringify(actuatorEvent));
+				},
+				function(actuatorError){
+					alert(JSON.stringify(actuatorError));
+				}
+			);
 		}
-		else {
-			var params = sem.deserialize(location.hash);
-			var aid = params['aid'];
-			var actuator = actuators[aid];
-			var val = jQuery("#actuator_value").val();
-			val = parseFloat(val);
-			if (actuator && !isNaN(val)) {
-				jQuery('#actuator_value_btn').attr("disabled", true);
-				jQuery.mobile.showPageLoadingMsg("a","Please Wait ...");
-				jQuery.getJSON('http://'+actuators_host+'/actuators/'+aid+'?callback=?',{'value': val},function(data){
-			        	actuator['value'] = val;
-			        	jQuery('#actuator_value_btn').attr("disabled", false);
-			        	jQuery.mobile.hidePageLoadingMsg();
-				});
-			}
+		catch(err){
+			console.log("Not a valid webinos actuator: " + err.message);
 		}
+
+		// -------------------old code-----------------------------
+		// var actuators_host = settings('actuators_host');
+		// if (!actuators_host) {
+		// 	jQuery.mobile.changePage(jQuery("#settings"));
+		// }
+		// else {
+		// 	var params = sem.deserialize(location.hash);
+		// 	var aid = params['aid'];
+		// 	var actuator = actuators[aid];
+		// 	var val = jQuery("#actuator_value").val();
+		// 	val = parseFloat(val);
+		// 	if (actuator && !isNaN(val)) {
+		// 		jQuery('#actuator_value_btn').attr("disabled", true);
+		// 		jQuery.mobile.showPageLoadingMsg("a","Please Wait ...");
+		// 		jQuery.getJSON('http://'+actuators_host+'/actuators/'+aid+'?callback=?',{'value': val},function(data){
+		// 	        	actuator['value'] = val;
+		// 	        	jQuery('#actuator_value_btn').attr("disabled", false);
+		// 	        	jQuery.mobile.hidePageLoadingMsg();
+		// 		});
+		// 	}
+		// }
 	});
 })();
