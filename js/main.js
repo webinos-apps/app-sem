@@ -170,7 +170,7 @@
 		            				var unit = (values && values[values.length-1].unit)  || '';
 		            				var time = (values && values[values.length-1].time)  || '';
 		            				jQuery("#sensors-list").append('<li><a href="#sensor?'+sem.serialize(params)+'"><img src="./assets/images/'+icons[sensor.api]+'"/><h3>'+sensor.displayName+'</h3><p>'+sensor.description+'</p><p class="ui-li-aside ui-li-desc"><strong id="sensor-'+sensor.id+'">'+value+' '+unit+'</strong><br><span id="time-'+sensor.id+'">'+time+'</span></p></a></li>');
-		                			/*
+		                			
 		                			service.addEventListener('onEvent', 
 		                    			function(event){
 		                            		console.log("New Event");
@@ -178,7 +178,7 @@
 		                            		onSensorEvent(event);
 		                        		},
 		                    			false
-		                    		);*/
+		                    		);
 		                			try {
 		                				jQuery('#sensors-list').listview('refresh');
 		                				jQuery("#sensors").trigger('updatelayout');
