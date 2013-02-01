@@ -1,6 +1,57 @@
 /**
  * main.js
  */
+
+    var sensors = {};
+    var actuators = {};
+    var sensorActive = {};
+
+    function toggleSensor(id) {
+        if(sensorActive[id]) {
+            sensors[id].removeEventListener('onEvent', null, false);
+            sensorActive[id] = false;
+            jQuery('#Start-'+id).prop('value', 'Start');
+        }
+        else {
+            sensors[id].addEventListener('onEvent',
+                function(event){
+                        console.log("New Event");
+                        console.log(event);
+                        onSensorEvent(event);
+                }, false);
+            sensorActive[id] = true;
+            jQuery('#Start-'+id).prop('value', 'Stop');
+        }
+    };
+
+    function onSensorEvent(event){
+        var sensor = sensors && sensors[event.sensorId];
+        if (sensor) {
+            if (!sensor.values) {
+                sensor.values = [];
+            }
+            var date = new Date(event.timestamp);
+            var item = {
+                value: event.sensorValues[0] || 0,
+                timestamp: event.timestamp,
+                unit: event.unit,
+                time: Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', event.timestamp)
+            };
+            sensor.values.push(item);
+            if (location.hash == "#sensor?sid="+sensor.id) {
+                if (sensor_chart && sensor_chart.series[0]) {
+                    var series = sensor_chart.get('values');
+                    series.addPoint({x: item.timestamp,y: item.value},true,series.data.length>10,true);
+                    jQuery("#sensor-value").html(item.value);
+                    jQuery("#sensor-unit").html(item.unit);
+                }
+            }
+            jQuery("#sensor-"+sensor.id).html(item.value+" "+item.unit);
+            jQuery("#time-"+sensor.id).html(item.time);
+        }
+    };
+
+
 (function(){
 	var sensor_types = [
 		"http://webinos.org/api/sensors.temperature",
@@ -26,8 +77,6 @@
 			"http://webinos.org/api/actuators.linearmotor": "linearmotor-icon.png"
 	};
 	
-	var sensors = {};
-	var actuators = {};
 	var sensor_chart;
 	var _token;
 	var _settings = {};
@@ -70,33 +119,7 @@
 		}
 	};
 	
-	var onSensorEvent = function(event){
-		var sensor = sensors && sensors[event.sensorId];
-		if (sensor) {
-			if (!sensor.values) {
-				sensor.values = [];
-			}
-			var date = new Date(event.timestamp);
-			var item = {
-				value: event.sensorValues[0] || 0,
-				timestamp: event.timestamp,
-				unit: event.unit,
-				time: Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', event.timestamp)
-			};
-			sensor.values.push(item);
-			if (location.hash == "#sensor?sid="+sensor.id) {
-				if (sensor_chart && sensor_chart.series[0]) {
-					var series = sensor_chart.get('values');
-					series.addPoint({x: item.timestamp,y: item.value},true,series.data.length>10,true);
-					jQuery("#sensor-value").html(item.value);
-					jQuery("#sensor-unit").html(item.unit);
-				}
-			}
-			jQuery("#sensor-"+sensor.id).html(item.value+" "+item.unit);
-			jQuery("#time-"+sensor.id).html(item.time);
-		}
-	};
-	
+
 	jQuery.ajaxSetup({
 		beforeSend: function (xhr) {
 			var t = token();
@@ -169,16 +192,9 @@
 		            				var value = (values && values[values.length-1].value)  || '&minus;';
 		            				var unit = (values && values[values.length-1].unit)  || '';
 		            				var time = (values && values[values.length-1].time)  || '';
-		            				jQuery("#sensors-list").append('<li><a href="#sensor?'+sem.serialize(params)+'"><img src="./assets/images/'+icons[sensor.api]+'"/><h3>'+sensor.displayName+'</h3><p>'+sensor.description+'</p><p class="ui-li-aside ui-li-desc"><strong id="sensor-'+sensor.id+'">'+value+' '+unit+'</strong><br><span id="time-'+sensor.id+'">'+time+'</span></p></a></li>');
+                                                        var sensorCode = '<table><tr><td width=\'12%\'><a href="#sensor?'+sem.serialize(params)+'"><img src="./assets/images/'+icons[sensor.api]+'"/></a></td><td width=\'48%\'><h3>'+sensor.displayName+'</h3><p>'+sensor.description+'</p></td><td width=\'20%\'><p class="ui-li-aside ui-li-desc"><strong id="sensor-'+sensor.id+'">'+value+' '+unit+'</strong><br><span id="time-'+sensor.id+'">'+time+'</span></p></td><td width=\'20%\'><input type=button onclick=\'toggleSensor("'+sensor.id+'")\' id=\'Start-'+sensor.id+'\' value=\'Start\'></input></td></tr></table>';
+                                                        jQuery("#sensors-list").append(sensorCode);
 		                			
-		                			service.addEventListener('onEvent', 
-		                    			function(event){
-		                            		console.log("New Event");
-		                            		console.log(event);
-		                            		onSensorEvent(event);
-		                        		},
-		                    			false
-		                    		);
 		                			try {
 		                				jQuery('#sensors-list').listview('refresh');
 		                				jQuery("#sensors").trigger('updatelayout');
