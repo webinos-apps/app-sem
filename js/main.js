@@ -195,7 +195,9 @@
                                     var value = (values && values[values.length-1].value)  || '&minus;';
                                     var unit = (values && values[values.length-1].unit)  || '';
                                     var time = (values && values[values.length-1].time)  || '';
-                                    var sensorCode = '<table><tr><td width=\'12%\'><a href="#sensor?'+sem.serialize(params)+'"><img src="./assets/images/'+icons[sensor.api]+'"/></a></td><td width=\'48%\'><h3>'+sensor.displayName+'</h3><p>'+sensor.description+'</p></td><td width=\'20%\'><p class="ui-li-aside ui-li-desc"><strong id="sensor-'+sensor.id+'">'+value+' '+unit+'</strong><br><span id="time-'+sensor.id+'">'+time+'</span></p></td><td width=\'20%\'><input type=button onclick=\'toggleSensor("'+sensor.id+'")\' id=\'Start-'+sensor.id+'\' value=\'Start\'></input></td></tr></table>';
+                                    var userid = service.serviceAddress.split('_')[1].split('/')[0];
+                                    var deviceid = service.serviceAddress.split('/')[1].split('_')[0];
+                                    var sensorCode = '<table><tr><td width=\'12%\'><a href="#sensor?'+sem.serialize(params)+'"><img src="./assets/images/'+icons[sensor.api]+'"/></a></td><td width=\'28%\'><h3>'+sensor.displayName+'</h3><p>'+sensor.description+'</p></td><td width=\'20%\'><p>User: '+userid+'</p><p>Device: '+deviceid+'</p></td><td width=\'20%\'><p class="ui-li-aside ui-li-desc"><strong id="sensor-'+sensor.id+'">'+value+' '+unit+'</strong><br><span id="time-'+sensor.id+'">'+time+'</span></p></td><td width=\'20%\'><input type=button onclick=\'toggleSensor("'+sensor.id+'")\' id=\'Start-'+sensor.id+'\' value=\'Start\'></input></td></tr></table>';
                                     jQuery("#sensors-list").append(sensorCode);
                                     
                                     try {
