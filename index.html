@@ -32,41 +32,25 @@
         <!-- Home Page -->
         <div data-role="page" id="home">
             <div data-role="header" style="text-align: center;">
-        		<img src="assets/images/smartenergymonitor.png">
+        		<img src="assets/images/logo.png">
         	</div>
-        	<div data-role="content" >	
-        		<div class=" ui-grid-a">
-					<div class="ui-block-a" style="text-align: right;"><a href="#sensors" style="padding-right: 10px;"><img src="assets/images/sensor-icon.png" width="128"/></a></div>
-					<div class="ui-block-b" style="text-align: left;"><a href="#actuators" style="padding-left: 10px;"><img src="assets/images/actuator-icon.png" width="128"/></a></div>
-					<div class="ui-block-a" style="text-align: right;"><a href="#providers" style="padding-right: 10px;"><img src="assets/images/provider-icon.png" width="128"/></a></div>
-					<div class="ui-block-b" style="text-align: left;"><a href="#settings" style="padding-left: 10px;"><img src="assets/images/settings-icon.png" width="128"/></a></div>
-        		</div>
+        	<div data-role="content" >
+                <center>
+                    <div id="menu_home">
+                        <span>
+                            <a href="#sensors" style="padding-right: 20px;"><img src="assets/images/sensor-icon.png" width="128"/></a>
+                        </span>
+                        <span>
+                            <a href="#actuators"><img src="assets/images/actuator-icon.png" width="128"/></a>
+                        </span>
+                        <span>
+                            <a href="#settings" style="padding-left: 20px;"><img src="assets/images/settings-icon.png" width="128"/></a>
+                        </span>
+                    </div>
+                </center>
         	</div> 
         </div>
         <!-- End Home Page -->
-        
-		<!-- Login Page -->
-        <div data-role="page" id="login">
-            <div data-role="header" style="text-align: center;">
-        		<img src="assets/images/smartenergymonitor.png">
-        	</div>
-        	<div data-role="content" >
-        		<h2>Login</h2>
-        		<p><em style="color: red;" id="login_err_msg"></em></p>
-				<fieldset>
-					<p>
-						<label for="username">Username:</label>
-						<input id="username" type="text" name="username" maxlength="30" />
-					</p>
-					<p>
-						<label for="password">Password:</label>
-						<input type="password" name="password" id="password" />
-					</p>
-                	<p><button id="login_btn">Login</button></p>
-            	</fieldset>
-        	</div>
-        </div>
-        <!-- End Login Page -->
         
         <!-- Sensors Page -->
         <div data-role="page" id="sensors"  data-title="Sensors">
@@ -75,10 +59,13 @@
         		<h1>Sensors</h1>
         		<a href="#home" data-role="button" data-icon="home">Home</a>
         	</div>
-        	<div data-role="content" >	
-        		<ul data-role="listview" data-inset="true" data-filter="true" id="sensors-list">
-        			<!-- place holder for sensors -->
-        		</ul>
+        	<div data-role="content" >
+                <center>
+                    <div class="refresh_div">
+                        <button id="refresh_sensors">Refresh</button>
+                    </div>
+                </center>
+        		<ul data-role="listview" data-inset="true" data-filter="true" id="sensors-list"></ul>
         	</div> 
         </div>
         <!-- End Sensors Page -->
@@ -90,51 +77,60 @@
         		<h1>Actuators</h1>
         		<a href="#home" data-role="button" data-icon="home">Home</a>
         	</div>
-        	<div data-role="content" >	
-        		<ul data-role="listview" data-inset="true" data-filter="true" id="actuators-list">
-        			<!-- place holder for actuators -->
-        		</ul>
+        	<div data-role="content" >
+                <center>
+                    <div class="refresh_div">
+                        <button id="refresh_actuators">Refresh</button>
+                    </div>
+                </center>
+        		<ul data-role="listview" data-inset="true" data-filter="true" id="actuators-list"></ul>
         	</div> 
         </div>
         <!-- End Actuators Page -->
         
-        <!-- Providers Page -->
-        <div data-role="page" id="providers">
-            <div data-role="header">
-        		<a data-role="button" data-rel="back" data-icon="back">Back</a>
-        		<h1>Providers</h1>
-        		<a href="#home" data-role="button" data-icon="home">Home</a>
-        	</div>
-        	<div data-role="content" >	
-        		<ul data-role="listview" data-inset="true" data-filter="true" id="providers-list">
-        			<!-- place holder for providers -->
-        		</ul>
-        	</div> 
-        </div>
-        <!-- End Providers Page -->
         
-        <!-- Settings Page -->
+        <!-- Rule Page -->
         <div data-role="page" id="settings">
             <div data-role="header">
-        		<a data-role="button" data-rel="back" data-icon="back">Back</a>
-        		<h1>Settings</h1>
-        		<a href="#home" data-role="button" data-icon="home">Home</a>
-        	</div>
-        	<div data-role="content">
-        		<fieldset>
-					<p>
-						<label for="actuators_host">Actuators host:</label>
-						<input type="text" id="actuators_host" name="actuators_host"/>
-					</p>
-					<hr>
-					<p><button id="logout_btn">Logout</button></p>
-            	</fieldset>
-            	
-            	
-        	</div> 
+                <a data-role="button" data-rel="back" data-icon="back">Back</a>
+                <h1>Settings</h1>
+                <a href="#home" data-role="button" data-icon="home">Home</a>
+            </div>
+            <div data-role="content">
+                <center>
+                    <div class="refresh_div">
+                        <button id="refresh_rules">Refresh</button>
+                    </div>
+                </center>
+                <fieldset>
+                    <div>
+                        <center>
+                            <table id="add_rule_table"></table>
+                        </center>
+                        
+                    </div>
+                    <hr>
+                    <div>
+                        <center>
+                            <table id="rules_table">
+                                <thead>
+                                    <tr class="header_tr"><td id="sensor_td" class="odd_td">Sensor</td>
+                                        <td id="operator_td" class="even_td">Operator</td>
+                                        <td id="threshold_td" class="odd_td">Threshold</td>
+                                        <td id="actuator_td" class="even_td">Actuator</td>
+                                        <td id="action_td" class="odd_td">Action</td>
+                                        <td id="delete_td" class="even_td"></td></tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </center>
+                    </div>
+                </fieldset>
+            </div> 
         </div>
-        <!-- End Providers Page -->
-        
+        <!-- End Rule Page -->
+
         <!-- Sensor Page -->
         <div data-role="page" id="sensor">
             <div data-role="header">
@@ -158,19 +154,21 @@
         		<a href="#home" data-role="button" data-icon="home">Home</a>
         	</div>
         	<div data-role="content" >
-        		<div class="ui-body ui-body-a"><span id="actuator-name"></span></div>
+        		<div class="ui-body ui-body-a"><span id="actuator-name"></span> - <span id="actuator-descr"></span></div>
         		<br>
         		<fieldset>
 	        		<p>
-						<label for="actuator_value_field">Actuator Value:</label>
+						<!--<label for="actuator_value_field">Actuator Value:</label>-->
+                        <p><label id="actuator_value_label">New value for actuator</label></p>
 						<div data-role="fieldcontain" id="actuator_value_field">
 	
 						</div>
 					</p>
 				</fieldset>
-				<p><button id="actuator_value_btn">Submit</button></p>
+				<!--<p><button id="actuator_value_btn">Submit</button></p>-->
         	</div> 
         </div>
         <!-- End Actuator Page -->
+
     </body>
 </html>
