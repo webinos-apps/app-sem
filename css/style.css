@@ -1,0 +1,269 @@
+
+/* ICONS */
+.remove_icon{
+	height: 36px;
+	width: 36px;
+}
+
+/* COMMON */
+
+.header_tr{
+	color: black;
+	font-weight: bold;
+	font-size: 14pt;
+}
+
+thead{
+	border: 2px solid;
+}
+
+td{
+	text-align: center;
+	vertical-align: middle;
+	height: 50px;
+}
+
+
+/* HOME PAGE */
+#menu_home{
+	margin-top: 100px;
+}
+
+#sensors_table{
+	width:100
+}
+
+#rules_table{
+	width:90%;
+}
+
+#add_rule_table{
+	width: 100%;
+	border-spacing: 15px;
+}
+
+
+
+
+
+.td_rule{
+	background-color: #D0D0D0;
+	border-top: 2px solid orange;
+	border-bottom: 2px solid orange;
+}
+
+.icon_td{
+	text-align: left;
+}
+
+.even_row{
+	
+}
+
+.odd_row{
+	
+}
+
+
+#add_sensor_td{
+	text-align: center;
+	width:400px;
+}
+#add_operators_td{
+	text-align: center;
+	width:100px;
+}
+#add_threshold_td{
+	text-align: center;
+	width:120px;
+}
+#add_actuator_td{
+	text-align: center;
+	width:400px;
+}
+#add_action_td{
+	text-align: center;
+	width:120px;
+}
+#delete_td, #add_rule_but{
+	text-align: center;
+	width:120px;
+}
+
+#sensor_td{
+	text-align: center;
+	width:38%;
+}
+
+#operator_td{
+	text-align: center;
+	width:6%;
+}
+
+#threshold_td{
+	text-align: center;
+	width:5%;
+}
+
+#actuator_td{
+	text-align: center;
+	width:38%;
+}
+
+#action_td{
+	text-align: center;
+	width:6%;
+}
+
+#delete_td{
+	text-align: center;
+	width:10%;
+}
+
+#rules_button_save{
+	width:100%;
+	height:35px;
+}
+
+#rules_operators_list{
+	width: 80px;
+}
+
+#actuator_value{
+	width:200px;
+	height:80px;
+	text-align: center;
+	font-size: 24pt;
+
+	color: white;
+	background: #989898;
+	border: 3;
+   	border-color: orange;
+   	border-radius: 15px;
+}
+
+#actuator_set_value_plus,#actuator_set_value_minus{
+/*
+	height: 40px;
+	width: 40px;
+	border-radius: 15px;
+	font-size: 14pt;
+	*/
+
+	background: #383838;
+	color: white;
+	padding: 5px;
+	font-size: 16px;
+	width: 100px;
+	line-height: 1;
+	border: 1;
+	border-color: orange;
+	border-radius: 15px;
+	height: 40px;
+	text-align: center;
+
+}
+
+#actuator_value_label{
+	font-size: 20pt;
+	font-weight: bold;
+}
+#actuator_value_btn{
+	width:200px;
+	height: 40px;
+	text-align: center;
+	font-size: 16px;
+}
+
+.refresh_div{
+	margin-bottom: 30px;
+	width: 200px;
+}
+
+
+
+.user_cell_label{
+	width: 80px;
+	text-align: right;
+	font-weight: bold;
+	vertical-align: bottom;
+	height:70px;
+}
+
+.user_cell_value{
+	text-align: left;
+	vertical-align: bottom;
+}
+
+.device_cell_label{
+	width: 80px;
+	text-align: right;
+	font-weight: bold;
+	vertical-align: top;
+}
+
+.device_cell_value{
+	text-align: left;
+	vertical-align: top;
+}
+
+.start_stop_but{
+	width:230px;
+	height:40px;
+	border-radius: 15px;
+	background:	#F8F8F8;
+	font-weight: bold;
+}
+
+.rule_elem_name{
+	font-weight: bold;
+	font-size: 12pt;
+}
+
+.rule_elem_description{
+	font-size: 10pt;
+}
+
+.actuator_current_value_p{
+	margin-top: 30px;
+	font-size: 36pt;
+	font-style: italic;
+}
+
+.actuator_current_value_td{
+	border: 1px solid black;
+	width:200px;
+	vertical-align: middle;	
+	border-radius: 15px;
+}
+
+.styled-select{
+	width:100%;
+   	background: #383838;
+	color: white;
+	text-align: center;
+	padding: 5px;
+	font-size: 16px;
+	line-height: 1;
+	border: 1;
+	border-color: orange;
+	border-radius: 15px;
+	height: 35px;
+	-webkit-appearance: none;
+}
+
+.styled-text{
+   background: #383838;
+   color: white;
+   padding: 5px;
+   font-size: 16px;
+   width: 100px;
+   line-height: 1;
+   border: 1;
+   border-color: orange;
+   border-radius: 15px;
+   height: 25px;
+   text-align: center;
+   -webkit-appearance: none;
+   }
+
