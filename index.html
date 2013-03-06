@@ -66,6 +66,9 @@
                     </div>
                 </center>
         		<ul data-role="listview" data-inset="true" data-filter="true" id="sensors-list"></ul>
+                <div id="sensors_waiting" class="waiting_style">
+                    <center><img src="assets/waiting.gif"/></center>
+                </div>
         	</div> 
         </div>
         <!-- End Sensors Page -->
@@ -84,6 +87,9 @@
                     </div>
                 </center>
         		<ul data-role="listview" data-inset="true" data-filter="true" id="actuators-list"></ul>
+                <div id="actuators_waiting" class="waiting_style">
+                    <center><img src="assets/waiting.gif"/></center>
+                </div>
         	</div> 
         </div>
         <!-- End Actuators Page -->
@@ -142,6 +148,29 @@
         		<div class="ui-body ui-body-a"><span id="sensor-name"></span>: <span id="sensor-value"></span> <span id="sensor-unit"></span></div>
         		<br>
         		<div id="sensor-chart" style="height: 300px; width: 90%; margin: 0 auto;"></div>
+                
+                <div id="configuration_div">
+                    <center>
+                        <table id="configuration_table" border=0>
+                            
+                            <tr>
+                                <td class="param_td">Mode</td>
+                                <td class="param_td">
+                                    <select id="cfg_mode">
+                                        <option value="">Choose mode</option>
+                                        <option value="fixedinterval">Fixed Interval</option>
+                                        <option value="valuechange">Value Change</option>
+                                    </select>
+                                </td>
+                                <td class="button_td" rowspan="4"><input type="button" id="cfg_startstop_but" value="Start"></td>
+                            </tr>
+                            <tr><td>Rate</td><td><input type="text" id="cfg_rate" class="cfg_element"></td></tr>
+                            <tr><td>Timeout</td><td><input type="text" id="cfg_timeout" class="cfg_element"></td></tr>
+                            <tr><td colspan="2"><input type="button" id="cfg_but" value="Configure"></td></tr>
+
+                        </table>
+                    </center>
+                </div>
         	</div> 
         </div>
         <!-- End Sensor Page -->

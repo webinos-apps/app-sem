@@ -266,4 +266,43 @@ td{
    text-align: center;
    -webkit-appearance: none;
    }
+   
+.waiting_style{
+	display:none;
+	margin-top: 100px;
+}
+
+#cfg_rate,#cfg_timeout{
+	width: 160px;
+	text-align: center;
+}
+
+#configuration_table{
+	width: 600px;
+}
+
+.param_td{
+	width: 25%;
+}
+
+.button_td{
+	width: 50%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
