@@ -32,6 +32,7 @@
 	var rules = [];	
 
 	var sensors = {};
+	var sensors_configuration = {};
 	var actuators = {};
 	var sensor_chart;
 	var sensorActive = {};
@@ -39,34 +40,43 @@
 	var _settings = {};
 	var listeners = new Array();
 	var displayed_actuator = 0;
+	var sensor_to_be_configured = null;
 
 
 	function toggle_sensor(ele) {
-		var id = ele.split('-')[1];
-		
-		if(jQuery('#'+ele).val() === "Start")
+		var id = "";
+		if(ele == undefined){
+			id = sensor_to_be_configured;
+			ele = "Start-" + id;
+		}
+		else{
+			id = ele.split('-')[1];
+		}
+
+		//jQuery('#cfg_startstop_but').button();
+		if(jQuery('#'+ele).val() === "Start"){
 			jQuery('#'+ele).val("Stop");
+			jQuery('#cfg_startstop_but').val("Stop");
+		}
 		
-		else
+		else{
 			jQuery('#'+ele).prop('value', "Start");
+			jQuery('#cfg_startstop_but').val("Start");
+		}
+
+
 		jQuery('#'+ele).button("refresh");
+		jQuery('#cfg_startstop_but').button("refresh");
 
 
         if(sensorActive[id]) {
-            sensors[id].removeEventListener('onEvent', null, false);
+            sensors[id].removeEventListener('sensor', onSensorEvent, false);
             sensorActive[id] = false;
         }
         else {
-            sensors[id].addEventListener('onEvent', 
-                function(event){
-                        console.log("New Event");
-                        console.log(event);
-                        onSensorEvent(event);
-                }, false);
-
+            sensors[id].addEventListener('sensor', onSensorEvent, false);
             sensorActive[id] = true;
         }
-        
     };
 	
 	function format_time(timestamp) {
@@ -380,11 +390,41 @@
 
 	function refresh_all(){
 		discover_sensors();
+		jQuery("#sensors-list").hide();
+		jQuery("#sensors_waiting").show();
+				
 		discover_actuators();
+		jQuery("#actuators-list").hide();
+		jQuery("#actuators_waiting").show();
 		setTimeout(function(){
+			try {
+				jQuery("#sensors-list").listview();
+				jQuery("#sensors-list").listview('refresh');
+				jQuery("#sensors").trigger('updatelayout');	
+			} catch (e) {
+
+			}
+			finally{
+				jQuery("#sensors-list").show();
+				jQuery("#sensors_waiting").hide();
+			}
+
+			try{
+				jQuery("#actuators-list").listview();
+				jQuery("#actuators-list").listview('refresh');
+				jQuery("#actuators").trigger('updatelayout');
+			}
+			catch (e) {
+				
+			}
+			finally{
+				jQuery("#actuators-list").show();
+				jQuery("#actuators_waiting").hide();
+			}
+
 			init_rules_ui();
 			load_rules_from_file();	
-		},500);
+		},3000);
 	}
 
 	function discover_sensors(whenFinish){
@@ -400,7 +440,7 @@
 						onBind:function(){
 		        			console.log("Service "+service.api+" bound");
 		        			console.log(service);
-		        			service.configureSensor({timeout: 120, rate: 500, eventFireMode: "fixedinterval"}, 
+		        			service.configureSensor({rate: 500, eventFireMode: "fixedinterval"}, 
 		        				function(){
 		        					var sensor = service;
 		                			var params = {sid: sensor.id};
@@ -421,7 +461,9 @@
                                         //userid = service.serviceAddress.split('_')[1].split('/')[0];
                                         //deviceid = service.serviceAddress.split('/')[1].split('_')[0];
                                     }
-                                    catch(e){}
+                                    catch(e){
+                                    	alert(e);
+                                    }
                                     
                                     var sensorCode = '<table id="sensors_table"><tr><td rowspan=\'2\' width=\'12%\'><a href="#sensor?'+sem.serialize(params)+'"><img src="./assets/images/'+icons[sensor.api]+'"/></a></td><td rowspan=\'2\' width=\'28%\'><h3>'+sensor.displayName+'</h3><p>'+sensor.description+'</p></td><td class=\'user_cell_label\'><strong>User:</strong></td><td class=\'user_cell_value\'>'+userid+'</td><td rowspan=\'2\' width=\'20%\'><p class="ui-li-aside ui-li-desc"><strong id="sensor-'+sensor.id+'">'+value+'</strong><strong>'+unit+'</strong><br><span id="time-'+sensor.id+'">'+time+'</span></p></td><td rowspan=\'2\' width=\'20%\'><input type=button id=\'Start-'+sensor.id+'\' value=\'Start\'></input></td></tr><tr><td class=\'device_cell_label\'><strong>Device:</strong></td><td class=\'device_cell_value\'>'+deviceid+'</td></td></table>';
                                     jQuery("#sensors-list").append(sensorCode);
@@ -436,15 +478,6 @@
                                     }
 
 									$('#Start-'+sensor.id).button("refresh");
-									
-		                			try {
-		                				jQuery('#sensors-list').listview();
-		                				jQuery('#sensors-list').listview('refresh');
-		                				jQuery("#sensors").trigger('updatelayout');
-		                			} catch (e) {
-		                				
-		                			}
-		                			
 								},
 								function (){
 									console.error('Error configuring Sensor ' + service.api);
@@ -457,6 +490,20 @@
 		}
 		if(whenFinish)
 			whenFinish();
+	}
+
+	function configure_sensor(mode,timeout,rate){
+		if(mode === "")
+			alert("Choose a valide mode");
+		else{
+			if(mode === "fixedinterval" && rate === "")
+				alert("Choose a valid rate (>0)");
+			else{
+				var params = {"mode":mode, "timeout":timeout, "rate":rate};
+				sensors_configuration[sensor_to_be_configured] = params;
+				sensors[sensor_to_be_configured].configureSensor(params, function(){}, function(){});
+			}
+		}
 	}
 
 	function discover_actuators(whenFinish){
@@ -494,14 +541,6 @@
                          	'<td class=\'device_cell_value\'>'+deviceid+'</td></td></table>';
                             
                             jQuery("#actuators-list").append(actuatorCode);
-
-		        			try {
-		        				jQuery('#actuators-list').listview();
-		 						jQuery('#actuators-list').listview('refresh');
-								jQuery("#actuators").trigger('updatelayout');
-							}
-							catch (e){
-							}
 		        		}
 					});
 				}
@@ -558,6 +597,7 @@
 		
 		discover_sensors();
 		discover_actuators();
+		jQuery('#cfg_startstop_but').button();
 
 		webinos.discovery.findServices(new ServiceType("http://webinos.org/api/file"), {
 			onFound: function (service) {
@@ -621,10 +661,43 @@
 				jQuery("#sensor-unit").html( v && v.unit || "");
 				series.name = sensor.displayName;
 				series.setData(data,true);
+
+				if(sensorActive[sid]){
+					jQuery('#cfg_startstop_but').val("Stop");
+				}
+				else{
+					jQuery('#cfg_startstop_but').val("Start");
+				}
+				jQuery('#cfg_startstop_but').button("refresh");
+
+				sensor_to_be_configured = sid;
+				if(sensors_configuration[sid]){
+					jQuery('#cfg_mode').val(sensors_configuration[sid].mode);
+					jQuery('#cfg_timeout').val(sensors_configuration[sid].timeout);
+					jQuery('#cfg_rate').val(sensors_configuration[sid].rate);
+				}
+				else{
+					jQuery('#cfg_timeout').val("");
+					jQuery('#cfg_rate').val("");
+				}
+
 			}
 		} catch (e) {
 			console.error(e);
 		}
+	});
+
+	/* Set configuration div */
+	jQuery('#cfg_but').live( 'click',function(event,data){
+		var mode = jQuery('#cfg_mode').val();
+		var timeout = jQuery('#cfg_timeout').val();
+		var rate = jQuery('#cfg_rate').val();
+		
+		configure_sensor(mode,timeout,rate);
+	});
+
+	jQuery('#cfg_startstop_but').live( 'click',function(event,data){
+		toggle_sensor();
 	});
 	/*------------------------------------End of Sensors Pages-------------------------------------*/
 
