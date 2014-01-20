@@ -1,3 +1,5 @@
+Obsolete: This application has evolved to the new webinos home hub https://github.com/webinos/hub-homeController
+
 SmartEnergyMonitor
 ==================
 
